@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+h3 {
+    @apply text-2xl font-bold;
+}
+
+.blog {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-top: 5%;
+    place-items: center;
+}
