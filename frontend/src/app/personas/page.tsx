@@ -16,7 +16,7 @@ function TalleresPage() {
   return (
     <div className='grid justify-items-center text-2xl font-semibold'>
       <div className='text-4xl mb-6'>Personas Page</div>
-      <div className='flex gap-2'>
+      <div className='grid grid-cols-4 gap-2'>
         {services.map(service => (
           <div key={service.nPerCodigo} className='card bg-slate-300 p-2 rounded-lg shadow-lg'>
             <h2 className='text-base mb-2'>Apellido: {service.cPerApellido}</h2>
