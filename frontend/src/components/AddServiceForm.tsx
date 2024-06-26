@@ -1,6 +1,7 @@
-"use client"
+"use client";
 import { Button } from '@nextui-org/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useRouter, usePathname } from "next/navigation";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -14,12 +15,42 @@ const AddPersonaForm = () => {
   const [nPerSueldo, setSueldo] = useState('');
   const [nPerEstado, setEstado] = useState('1');
   const [error, setError] = useState('');
+  
+  const router = useRouter();
+  const pathname = usePathname();
+  const isUpdate = pathname.includes('actualizarPersona');
+  const personaId = pathname.split('/').pop();
+
+  useEffect(() => {
+    if (isUpdate && personaId) {
+      const fetchPersona = async () => {
+        const response = await fetch(`http://localhost:3000/personas/${personaId}`);
+        if (response.ok) {
+          const data = await response.json();
+          setApellido(data.cPerApellido);
+          setNombre(data.cPerNombre);
+          setDireccion(data.cPerDireccion);
+          setFecNac(data.dPerFecNac);
+          setEdad(data.nPerEdad.toString());
+          setSexo(data.cPerSexo);
+          setSueldo(data.nPerSueldo.toString());
+          setEstado(data.nPerEstado.toString());
+        } else {
+          setError('Failed to fetch persona data.');
+        }
+      };
+      
+      fetchPersona();
+    }
+  }, [isUpdate, personaId]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const url = isUpdate ? `http://localhost:3000/personas/${personaId}` : 'http://localhost:3000/personas';
+    const method = isUpdate ? 'PATCH' : 'POST';
 
-    const response = await fetch('http://localhost:3000/personas', {
-      method: 'POST',
+    const response = await fetch(url, {
+      method,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -46,8 +77,8 @@ const AddPersonaForm = () => {
       setSueldo('');
       setEstado('1');
       setError('');
-      // Show success toast
-      toast.success('Persona guardada con éxito!');
+      toast.success(`Persona ${isUpdate ? 'actualizada' : 'guardada'} con éxito!`);
+      router.push('/personas');
     } else {
       const errorData = await response.json();
       setError(errorData.message);
@@ -197,7 +228,7 @@ const AddPersonaForm = () => {
           </div>
         </div>
         {error && <p style={{ color: 'red' }}>{error}</p>}
-        <Button type="submit" className="mt-4">Agregar Persona</Button>
+        <Button type="submit" className="mt-4">{isUpdate ? 'Actualizar Persona' : 'Agregar Persona'}</Button>
       </form>
       <ToastContainer />
     </>
