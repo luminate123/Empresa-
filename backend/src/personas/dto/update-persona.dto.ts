@@ -7,4 +7,5 @@ export class UpdatePersonaDto {
     cPerSexo?: string;
     nPerSueldo?: number;
     nPerEstado?: string;
+    imagen?: string;
 }

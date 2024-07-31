@@ -36,6 +36,9 @@ export class Persona {
     @Column({ type: 'varchar', length: 100, nullable: true })
     remember_token: string;
 
+    @Column({ nullable: true })
+    imagen: string | null;
+
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
 

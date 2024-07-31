@@ -19,4 +19,7 @@ export class CreatePersonaDto {
     nPerSueldo: number;
     @IsNotEmpty()
     nPerEstado: string;
+
+    @IsNotEmpty()
+    imagen:string;
 }

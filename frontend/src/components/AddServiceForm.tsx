@@ -14,8 +14,9 @@ const AddPersonaForm = () => {
   const [cPerSexo, setSexo] = useState('Masculino');
   const [nPerSueldo, setSueldo] = useState('');
   const [nPerEstado, setEstado] = useState('1');
+  const [file, setFile] = useState(null);
   const [error, setError] = useState('');
-  
+
   const router = useRouter();
   const pathname = usePathname();
   const isUpdate = pathname.includes('actualizarPersona');
@@ -39,7 +40,7 @@ const AddPersonaForm = () => {
           setError('Failed to fetch persona data.');
         }
       };
-      
+
       fetchPersona();
     }
   }, [isUpdate, personaId]);
@@ -49,21 +50,22 @@ const AddPersonaForm = () => {
     const url = isUpdate ? `http://localhost:3000/personas/${personaId}` : 'http://localhost:3000/personas';
     const method = isUpdate ? 'PATCH' : 'POST';
 
+    const formData = new FormData();
+    formData.append('cPerApellido', cPerApellido);
+    formData.append('cPerNombre', cPerNombre);
+    formData.append('cPerDireccion', cPerDireccion);
+    formData.append('dPerFecNac', dPerFecNac);
+    formData.append('nPerEdad', nPerEdad);
+    formData.append('cPerSexo', cPerSexo);
+    formData.append('nPerSueldo', nPerSueldo);
+    formData.append('nPerEstado', nPerEstado);
+    if (file) {
+      formData.append('file', file);
+    }
+
     const response = await fetch(url, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        cPerApellido,
-        cPerNombre,
-        cPerDireccion,
-        dPerFecNac,
-        nPerEdad: parseInt(nPerEdad, 10),
-        cPerSexo,
-        nPerSueldo: parseFloat(nPerSueldo),
-        nPerEstado
-      }),
+      body: formData,
     });
 
     if (response.ok) {
@@ -76,6 +78,7 @@ const AddPersonaForm = () => {
       setSexo('Masculino');
       setSueldo('');
       setEstado('1');
+      setFile(null);
       setError('');
       toast.success(`Persona ${isUpdate ? 'actualizada' : 'guardada'} con éxito!`);
       router.push('/personas');
@@ -224,6 +227,21 @@ const AddPersonaForm = () => {
                 <option value="1">Activo</option>
                 <option value="0">Inactivo</option>
               </select>
+            </div>
+          </div>
+          <div className="col-span-full">
+            <label htmlFor="file" className="block text-sm font-medium leading-6 text-gray-900">
+              Imagen
+            </label>
+            <div className="mt-2">
+              <input
+                type="file"
+                id="file"
+                onChange={(e) => setFile(e.target.files[0])}
+                required
+                accept="image/*" // Add accept attribute to only allow image files
+                className="block w-96 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
             </div>
           </div>
         </div>

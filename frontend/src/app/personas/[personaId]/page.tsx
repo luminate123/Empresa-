@@ -38,6 +38,7 @@ async function page({ params }: { params: { personaId: number } }) {
             <p className='text-base mb-2'>Estado: {service.nPerEstado}</p>
             <p className='text-base mb-2'>Created At: {service.created_at}</p>
             <p className='text-base mb-2'>Updated At: {service.updated_at}</p>
+            <img src={`http://localhost:3000/${service.imagen}`} alt="Imagen" />
             <Button as={Link} href={`/personas/actualizarPersona/${service.nPerCodigo}`}>Actualizar Servicio</Button>
             <BotomDelete />
 
